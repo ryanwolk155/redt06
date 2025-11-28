@@ -1,10 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+
   <script>
-    location.replace("https://flexionpay.com/r/cc236");
+    (function() {
+
+      // -------------------------------
+      // 1 — CAPTURAR TTC LID DA URL
+      // -------------------------------
+      const params = new URLSearchParams(window.location.search);
+      const urlTtclid = params.get("ttclid");
+
+      // -------------------------------
+      // 2 — FUNÇÕES PARA SALVAR EM COOKIE + LOCALSTORAGE
+      // -------------------------------
+      function setCookie(name, value, days) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/";
+      }
+
+      function getCookie(name) {
+        return document.cookie.split("; ").reduce((r, v) => {
+          const parts = v.split("=");
+          return parts[0] === name ? decodeURIComponent(parts[1]) : r
+        }, "");
+      }
+
+      // -------------------------------
+      // 3 — SALVAR SE VEIO PELA URL
+      // -------------------------------
+      if (urlTtclid) {
+        try { localStorage.setItem("ttclid", urlTtclid); } catch(e) {}
+        setCookie("ttclid", urlTtclid, 30);
+      }
+
+      // -------------------------------
+      // 4 — RECUPERAÇÃO DO TTC LID
+      // -------------------------------
+      let ttclid =
+        urlTtclid ||
+        (() => { try { return localStorage.getItem("ttclid"); } catch(e) { return null; } })() ||
+        getCookie("ttclid") ||
+        "";
+
+      // -------------------------------
+      // 5 — LINK FINAL DO REDIRECT
+      // -------------------------------
+      const BASE_URL = "https://t.me/naysafada06_bot?start=770929fb-c33f-4011-a5ca-f3702e3330dd";
+      const FINAL_URL = ttclid ? `${BASE_URL}?ttclid=${ttclid}` : BASE_URL;
+
+      // -------------------------------
+      // 6 — REDIRECT IMEDIATO
+      // -------------------------------
+      window.location.replace(FINAL_URL);
+
+    })();
   </script>
-  <meta http-equiv="refresh" content="0; url=https://flexionpay.com/r/cc236">
+
 </head>
 <body></body>
 </html>
